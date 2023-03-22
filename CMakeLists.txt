@@ -1,11 +1,12 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.15)
 
 # set the project name
 project(athena CUDA)
 
 # enable C and C++ languages
-enable_language(C)
-enable_language(CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 17)
+
 
 # find the CUDA package
 find_package(CUDA REQUIRED)
