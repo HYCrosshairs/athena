@@ -8,6 +8,8 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
+using namespace system::service::network;
+
 Socket::Socket() 
 {
     sockfd = socket(AF_INET, SOCK_STREAM, 0);

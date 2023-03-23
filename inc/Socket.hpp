@@ -1,5 +1,8 @@
 #include <iostream>
 #include <string>
+
+namespace system::service::network
+{
 class Socket 
 {
 public:
@@ -21,4 +24,5 @@ public:
 
 private:
     int sockfd;
-};
+};    
+} // namespace system::service::network
