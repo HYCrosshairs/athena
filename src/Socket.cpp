@@ -8,7 +8,7 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
-using namespace system::service::network;
+using namespace service::system::network;
 
 Socket::Socket() 
 {

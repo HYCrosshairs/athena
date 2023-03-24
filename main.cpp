@@ -1,36 +1,26 @@
+#include <iostream>
+#include <string>
+
 #include "Socket.hpp"
 
-#include <iostream>
+using namespace service::system::network;
 
-using namespace system::service::network;
-
-int main(int argc, char **argv)
+int main()
 {
-    Socket client;
+    Socket clientSocket;
+    clientSocket.connect("192.168.1.67", 5000);
+    std::cout << "Connected to server!\n";
 
-    client.connect("192.168.1.67", 5000);
-
+    //std::string message;
     while (true)
     {
-        int received{0};
-        char* data = nullptr;
-        while (received < 0)
-        {
-            int bytes = client.recv(data + received, sizeof(char));
+        std::cout << "Message to send : \n";
+        
+        clientSocket.send("Okay", 4);
+        char buf[1024] = {0};
+        int n = clientSocket.recv(buf, sizeof(buf));
+        std::cout << "Received message: " << buf << "\n";
+    }
 
-            if(bytes == -1)
-            {
-                std::cerr <<  "Unable to receive the data" << std::endl;
-                break;
-            }
-            received += bytes;
-        }
-
-        if (received == 0)
-        {
-            std::cerr << "Connection closed by the server" << std::endl;
-            break;
-        }
-    }    
     return 0;
 }

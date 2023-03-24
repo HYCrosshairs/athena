@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-namespace system::service::network
+namespace service::system::network
 {
 class Socket 
 {
@@ -25,4 +25,4 @@ public:
 private:
     int sockfd;
 };    
-} // namespace system::service::network
+} // namespace service::system::network
