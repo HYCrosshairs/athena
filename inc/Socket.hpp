@@ -1,5 +1,8 @@
+#pragma once
+
 #include <iostream>
 #include <string>
+#include <vector>
 
 namespace service::system::network
 {
@@ -22,7 +25,16 @@ public:
 
     int recv(char* buf, size_t len, int flags = 0);
 
+    void handleClient(Socket& client);
+
+    void receiveMessages(Socket& server);
+
+    int getSockFd() const;
+
+    void setSockFd(int sockfd);
+
 private:
     int sockfd;
+    std::vector<Socket> clients;
 };    
 } // namespace service::system::network

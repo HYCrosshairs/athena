@@ -60,6 +60,7 @@ int Socket::accept()
         std::cerr << "Error accepting connection\n";
         exit(EXIT_FAILURE);
     }
+    clients.push_back(clientfd);
     return clientfd;
 }
 
@@ -106,4 +107,55 @@ int Socket::send(const char* buf, size_t len, int flags)
 int Socket::recv(char* buf, size_t len, int flags)
 {
     return ::recv(sockfd, buf, len, flags);
+}
+
+void Socket::handleClient(Socket& client)
+{
+    char buffer[1024];
+    int bytesRecv;
+
+    while (true)
+    {
+        bytesRecv = client.recv(buffer, sizeof(buffer));
+        if (bytesRecv < 1)
+        {
+            break;
+        }
+
+        for (auto& clt : clients)
+        {
+            if (clt.getSockFd() == client.getSockFd())
+            {
+                continue;
+            }
+            clt.send(buffer, bytesRecv);
+        }
+    }
+    clients.erase(remove(clients.begin(), clients.end(), client), clients.end());
+}
+
+void Socket::receiveMessages(Socket& server)
+{
+    char buffer[1024];
+    int bytesRecv;
+
+    while (true)
+    {
+        bytesRecv = server.recv(buffer, sizeof(buffer));
+        if (bytesRecv < 1)
+        {
+            break;
+        }
+        std::cout << buffer << std::endl;
+    }
+}
+
+int Socket::getSockFd() const
+{
+    return sockfd;
+}
+
+void Socket::setSockFd(int sockfd)
+{
+    this->sockfd = sockfd;
 }

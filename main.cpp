@@ -14,9 +14,11 @@ int main()
     //std::string message;
     while (true)
     {
+        char sendBuf[1024];
         std::cout << "Message to send : \n";
-        
-        clientSocket.send("Okay", 4);
+        std::cin.getline(sendBuf, sizeof(sendBuf));
+
+        clientSocket.send(sendBuf, sizeof(sendBuf));
         char buf[1024] = {0};
         int n = clientSocket.recv(buf, sizeof(buf));
         std::cout << "Received message: " << buf << "\n";
