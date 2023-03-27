@@ -24,5 +24,24 @@ int main()
         std::cout << "Received message: " << buf << "\n";
     }
 
+/*
+    Socket serverSocket;
+    serverSocket.bind(5000);
+    serverSocket.listen();
+
+    std::vector<Socket> clients;
+    while (true) 
+    {
+        Socket client;
+        int client_fd = serverSocket.accept();
+        client.setSockFd(client_fd);
+        clients.push_back(client);
+
+        thread t(client_handler, client);
+        t.detach();
+    }
+*/
+    
+
     return 0;
 }
