@@ -35,3 +35,4 @@ Makefile
 *.cmake
 CMakeCache.txt
 CMakeFiles
+athena

@@ -60,7 +60,7 @@ int Socket::accept()
         std::cerr << "Error accepting connection\n";
         exit(EXIT_FAILURE);
     }
-    clients.push_back(clientfd);
+    //clients.push_back(clientfd);
     return clientfd;
 }
 
@@ -131,7 +131,7 @@ void Socket::handleClient(Socket& client)
             clt.send(buffer, bytesRecv);
         }
     }
-    clients.erase(remove(clients.begin(), clients.end(), client), clients.end());
+    //clients.erase(remove(clients.begin(), clients.end(), client), clients.end());
 }
 
 void Socket::receiveMessages(Socket& server)
