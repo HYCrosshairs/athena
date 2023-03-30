@@ -49,6 +49,27 @@ int main()
         cv::Mat gray;
         cv::cvtColor(frame, gray, cv::COLOR_BGR2GRAY);
 
+        // Apply edge detection
+        cv::Mat edges;
+        cv::Canny(gray, edges, 25, 250, 3);
+
+        // Find contours
+        std::vector<std::vector<cv::Point>> contours;
+        cv::findContours(edges, contours, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+
+        // Approximate contours to polygons and draw rectangles
+        for (size_t i = 0; i < contours.size(); i++) 
+        {
+            std::vector<cv::Point> approx;
+            cv::approxPolyDP(contours[i], approx, cv::arcLength(contours[i], true) * 0.02, true);
+            
+            if (approx.size() == 4 && cv::isContourConvex(approx)) 
+            {
+                cv::rectangle(frame, approx[0], approx[2], cv::Scalar(0, 255, 0), 3);
+            }
+        }
+
+        /*
         // Apply thresholding
         cv::Mat thresh;
         cv::threshold(gray, thresh, 128, 255, cv::THRESH_BINARY);
@@ -71,7 +92,7 @@ int main()
                 cv::polylines(frame, polygon, true, cv::Scalar(0, 255, 0), 2);
             }
         }
-
+        */
         // Display the received frame
         cv::imshow("Video Stream", frame);
 
