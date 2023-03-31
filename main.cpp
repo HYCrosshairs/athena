@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <iostream>
 #include <string>
+#include <getopt.h>
 
 #include "Socket.hpp"
 
@@ -13,10 +14,57 @@ constexpr uint16_t WIDTH = 640; // Width of the video stream
 constexpr uint16_t HEIGHT = 480; // Height of the video stream
 
 using namespace service::system::network;
-//using namespace cv;
 
-int main()
+
+std::string preListName;
+
+void showUsage(const char *appName)
 {
+    std::cout << "Usage: --<command_name> <command_parameters>" << appName << std::endl;
+    std::cout << "\t--ip-server|-i: Insert the server IP" << std::endl;
+    std::cout << "\t--port|-p: Choose communication port" << std::endl;
+}
+
+/* Parse the command line arguments */
+int parse_command_line(int argc, char **argv)
+{
+    int ret{0};
+    int opt;
+
+    const option long_options[] = {
+        {"ip-server",       no_argument, 0, 'i'},
+        {"port",  no_argument, 0, 'p'},
+        {"help",        no_argument, 0, 'h'},
+        {0, 0, 0, 0}
+    };
+
+    while ((opt = getopt_long(argc, argv, "ip:h", long_options, NULL)) != -1) {
+        switch (opt)
+        {
+        case 'i':
+            break;
+        case 'p':
+            preListName = optarg;
+            break;
+        case 'h':
+        default:
+            showUsage(argv[0]);
+            ret = -EINVAL;
+            break;
+        }
+    }
+
+    return ret;
+}
+
+
+int main(int argc, const char *argv[])
+{
+    if (argc <= 0)
+    {
+        /* code */
+    }
+    
     Socket clientSocket;
     clientSocket.connect("192.168.1.67", PORT);
     std::cout << "Connected to server!\n";
@@ -69,30 +117,6 @@ int main()
             }
         }
 
-        /*
-        // Apply thresholding
-        cv::Mat thresh;
-        cv::threshold(gray, thresh, 128, 255, cv::THRESH_BINARY);
-
-        // Find contours
-        std::vector<std::vector<cv::Point>> contours;
-        cv::findContours(thresh, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-
-        // Iterate over contours
-        for (auto& contour : contours) 
-        {
-            // Approximate contour as a polygon
-            std::vector<cv::Point> polygon;
-            cv::approxPolyDP(contour, polygon, 10, true);
-
-            // If polygon has four sides, it's likely to be a rectangle
-            if (polygon.size() == 4) 
-            {
-                // Draw rectangle on frame
-                cv::polylines(frame, polygon, true, cv::Scalar(0, 255, 0), 2);
-            }
-        }
-        */
         // Display the received frame
         cv::imshow("Video Stream", frame);
 
