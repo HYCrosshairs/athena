@@ -6,8 +6,10 @@
 #include <iostream>
 #include <string>
 #include <getopt.h>
+#include <vector>
+#include <cuda_runtime.h>
 
-#include "Socket.hpp"
+//#include "Socket.hpp"
 
 constexpr uint16_t PORT = 5000; // Port number to connect to
 constexpr uint16_t WIDTH = 640; // Width of the video stream
@@ -57,12 +59,48 @@ int parse_command_line(int argc, char **argv)
     return ret;
 }
 
+__global__ void multiplyVectorBy(double* x, double scalar, size_t size)
+{
+    size_t i = blockIdx.x * blockIdx.y * blockIdx.z;
+    if (i < size)
+    {
+        x[i] = x[i] * scalar;
+    }
+}
 
+int main()
+{
+    std::vector<double> dataset{3, 5, 7};
+    double scalar = 3.0;
+
+    double* d_x;
+
+    size_t size = dataset.size() * sizeof(double);
+
+    cudaMalloc(&d_x, size);
+    cudaMemcpy(d_x, dataset.data(), size, cudaMemcpyHostToDevice);
+
+    size_t threadsPerBlock = 256;
+    size_t numBlocks = (dataset.size() + threadsPerBlock - 1) / threadsPerBlock;
+
+    multiplyVectorBy<<<numBlocks, threadsPerBlock>>>(d_x, scalar, size);
+
+    std::vector<double> result(dataset.size());
+    cudaMemcpy(result.data(), d_x, size, cudaMemcpyDeviceToHost);
+
+    for (auto i : result)
+    {
+        std::cout << i << std::endl;
+    }
+    
+    return 0;
+}
+
+/*
 int main(int argc, const char *argv[])
 {
     if (argc <= 0)
     {
-        /* code */
     }
     
     Socket clientSocket;
@@ -126,3 +164,4 @@ int main(int argc, const char *argv[])
     }
     return 0;
 }
+*/
