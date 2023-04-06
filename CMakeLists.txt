@@ -1,65 +1,35 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.10)
 
-project(athena VERSION 1.0.0 LANGUAGES CXX)
-include(GNUInstallDirs)
+project(athena LANGUAGES CUDA CXX)
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+# Set the output directory for compiled files
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-add_compile_options(-Wall -Wextra -Wconversion -pedantic -Wformat-security)# -Wfatal-errors)
-
-include_directories(inc)
-set(SOURCES
-    src/Socket.cpp
-    main.cu)
-
-# find the packages
+# Find and include CUDA
 find_package(CUDA REQUIRED)
-find_package(OpenCV REQUIRED)
-find_package(OpenMP REQUIRED)
-
-if (OPENMP_FOUND)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-endif()
-
-# set the CUDA architecture to match your GPU
-if (CUDA_FOUND)
-    set(CUDA_ARCH "-arch=sm_61")
-    set(CMAKE_CUDA_FLAGS "${CUDA_ARCH}")
-    set(CUDA_NVCC_FLAGS ${CUDA_ARCH_FLAGS};-O3;-std=c++11)
-endif()
-
-# set vectorization library based on processor type
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
-    set(VECTORIZE_LIB "intel_vector")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    set(VECTORIZE_LIB "gomp")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    set(VECTORIZE_LIB "openmp")
-endif()
-
-include_directories(${OpenCV_INCLUDE_DIRS})
 include_directories(${CUDA_INCLUDE_DIRS})
 
-# add the executable
-add_executable(${PROJECT_NAME} ${SOURCES} ${RESOURCES})
+# Find and include OpenCV
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
 
-# set CUDA properties for target executable
-if (CUDA_FOUND)
-    set_target_properties(athena PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
-endif()
+# Add the CUDA and C++ source files
+file(GLOB CUDA_SOURCES "src/cuda/*.cu")
+file(GLOB CPP_SOURCES "src/cpp/*.cpp")
 
-# link against CUDA and vectorization libraries
-if (CUDA_FOUND)
-    target_link_libraries(athena ${CUDA_LIBRARIES} ${CUDA_cusolver_LIBRARY})
-endif()
+include_directories(inc/cuda)
+include_directories(inc/cpp)
 
-if (VECTORIZE_LIB)
-    target_link_libraries(athena ${VECTORIZE_LIB})  
-endif()
+# Add the CUDA and C++ header files
+file(GLOB CUDA_HEADERS "inc/cuda/*.cuh")
+file(GLOB CPP_HEADERS "inc/cpp/*.hpp")
 
-if(OpenCV_LIBS)
-    target_link_libraries(athena ${OpenCV_LIBS})
-endif()
+# Compile the CUDA code into a library
+#cuda_add_library(MyCudaLib ${CUDA_SOURCES} ${CUDA_HEADERS})
+#target_link_libraries(MyCudaLib ${CUDA_LIBRARIES})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
-
+# Compile the C++ code into an executable
+add_executable(athena ${CPP_SOURCES} ${CPP_HEADERS} ${CUDA_SOURCES} ${CUDA_HEADERS})
+target_link_libraries(athena ${OpenCV_LIBS})
