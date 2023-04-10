@@ -9,27 +9,24 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Find and include CUDA
 find_package(CUDA REQUIRED)
+set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} -rdc=true")
 include_directories(${CUDA_INCLUDE_DIRS})
 
 # Find and include OpenCV
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-# Add the CUDA and C++ source files
-file(GLOB CUDA_SOURCES "src/cuda/*.cu")
-file(GLOB CPP_SOURCES "src/cpp/*.cpp")
-
 include_directories(inc/cuda)
 include_directories(inc/cpp)
 
-# Add the CUDA and C++ header files
-file(GLOB CUDA_HEADERS "inc/cuda/*.cuh")
-file(GLOB CPP_HEADERS "inc/cpp/*.hpp")
+# Add the CUDA and C++ source files
+file(GLOB_RECURSE CUDA_SOURCES "src/cuda/*.cu")
+file(GLOB_RECURSE CPP_SOURCES "src/cpp/*.cpp")
 
-# Compile the CUDA code into a library
-#cuda_add_library(MyCudaLib ${CUDA_SOURCES} ${CUDA_HEADERS})
-#target_link_libraries(MyCudaLib ${CUDA_LIBRARIES})
+# Add the CUDA and C++ header files
+file(GLOB_RECURSE CUDA_HEADERS "inc/cuda/*.cuh")
+file(GLOB_RECURSE CPP_HEADERS "inc/cpp/*.hpp")
 
 # Compile the C++ code into an executable
 add_executable(athena ${CPP_SOURCES} ${CPP_HEADERS} ${CUDA_SOURCES} ${CUDA_HEADERS})
-target_link_libraries(athena ${OpenCV_LIBS})
+target_link_libraries(athena ${OpenCV_LIBS} ${CUDA_LIBRARIES})

@@ -8,15 +8,18 @@
 #include <getopt.h>
 #include <vector>
 #include <cuda_runtime.h>
-#include "Socket.hpp"
+#include <array>
 
-#include "Vectorization.cuh"
+//#include "Socket.hpp"
+
+#include "CudaVector.cuh"
 
 constexpr uint16_t PORT = 5000; // Port number to connect to
 constexpr uint16_t WIDTH = 640; // Width of the video stream
 constexpr uint16_t HEIGHT = 480; // Height of the video stream
 
-using namespace service::system::network;
+//using namespace service::system::network;
+using namespace ai::ml::neural;
 
 
 std::string preListName;
@@ -60,9 +63,24 @@ int parse_command_line(int argc, char **argv)
     return ret;
 }*/
 
-int main()
+int main(int argc, char const *argv[])
 {
-    Vectorization();
+    size_t size = 7;
+    double* data = new double[size];
+
+    for (size_t i = 0; i < size; i++)
+    {
+        data[i] = 2 * i + 3;
+    }    
+
+    CudaVector<double> cudaVector(size, data);
+
+    cudaVector.cudaConfigureKernelCall(256);
+    cudaVector.cudaKernelCall(7);
+    cudaVector.cudaShowKernelCallResults();
+
+    delete[] data;
+
     return 0;
 }
 
