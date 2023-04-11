@@ -13,6 +13,8 @@
 //#include "Socket.hpp"
 
 #include "CudaVector.cuh"
+#include "Perceptron.hpp"
+#include "gnuplot-iostream.h"
 
 constexpr uint16_t PORT = 5000; // Port number to connect to
 constexpr uint16_t WIDTH = 640; // Width of the video stream
@@ -66,6 +68,8 @@ int parse_command_line(int argc, char **argv)
 int main(int argc, char const *argv[])
 {
     size_t size = 7;
+    Gnuplot gp;
+
     double* data = new double[size];
 
     for (size_t i = 0; i < size; i++)
@@ -81,9 +85,45 @@ int main(int argc, char const *argv[])
 
     delete[] data;
 
+    Eigen::MatrixXd matrix = Perceptron::make_blobs(100, 2, 2);
+    //std::cout << X << std::endl;
+
+    //gp << "plot '-' with lines title ";
+    gp << "set xlabel ";
+    gp << "set ylabel ";
+    gp << "set grid";
+
+    std::vector<double> matrix_data(matrix.data(), matrix.data() + matrix.rows() * matrix.cols());
+    gp.send1d(matrix_data);
+    //std::vector<double> matrix_data(matrix.data(), matrix.data() + matrix.rows() * matrix.cols());
+
+    std::cout << "Press enter to exit." << std::endl;
+    std::cin.get();
+
     return 0;
 }
+/*
+int main()
+{
+    Gnuplot gp;
 
+    std::vector<double> x, y;
+    double increment = 0.1;
+
+    for (double i = 0; i < 10; i += increment) {
+        x.push_back(i);
+        y.push_back(std::sin(i));
+    }
+
+    gp << "plot '-' with lines title 'sin(x)'\n";
+    gp.send1d(std::make_tuple(x, y));
+
+    std::cout << "Press enter to exit." << std::endl;
+    std::cin.get();
+
+    return 0;
+}
+*/
 /*
 int main(int argc, const char *argv[])
 {

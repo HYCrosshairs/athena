@@ -16,6 +16,9 @@ include_directories(${CUDA_INCLUDE_DIRS})
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
+set(EIGEN3_INCLUDE_DIR "/usr/include/eigen3")
+include_directories(${EIGEN3_INCLUDE_DIR})
+
 include_directories(inc/cuda)
 include_directories(inc/cpp)
 
@@ -29,4 +32,4 @@ file(GLOB_RECURSE CPP_HEADERS "inc/cpp/*.hpp")
 
 # Compile the C++ code into an executable
 add_executable(athena ${CPP_SOURCES} ${CPP_HEADERS} ${CUDA_SOURCES} ${CUDA_HEADERS})
-target_link_libraries(athena ${OpenCV_LIBS} ${CUDA_LIBRARIES})
+target_link_libraries(athena ${OpenCV_LIBS} ${CUDA_LIBRARIES} boost_iostreams boost_system)
