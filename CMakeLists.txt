@@ -1,35 +1,30 @@
-cmake_minimum_required(VERSION 3.10)
+# Athena Project
 
-project(athena LANGUAGES CUDA CXX)
+cmake_minimum_required(VERSION 3.18)
+project(athena LANGUAGES C CXX CUDA)
 
-# Set the output directory for compiled files
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_CXX_STANDARD 23)
 
-# Find and include CUDA
-find_package(CUDA REQUIRED)
-set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} -rdc=true")
-include_directories(${CUDA_INCLUDE_DIRS})
 
-# Find and include OpenCV
-find_package(OpenCV REQUIRED)
-include_directories(${OpenCV_INCLUDE_DIRS})
+set(TARGET_DEVICE "CPU" CACHE STRING "Target device for build (CPU or GPU)")
+set_property(CACHE TARGET_DEVICE PROPERTY STRINGS CPU GPU)
+message(STATUS "Configured target device: ${TARGET_DEVICE}")
 
-set(EIGEN3_INCLUDE_DIR "/usr/include/eigen3")
-include_directories(${EIGEN3_INCLUDE_DIR})
+if(TARGET_DEVICE STREQUAL "GPU")
+    add_compile_definitions(GPU)
+elseif(TARGET_DEVICE STREQUAL "CPU")
+    add_compile_definitions(CPU)
+else()
+    message(FATAL_ERROR "Unknown TARGET_DEVICE: ${TARGET_DEVICE}. Use CPU or GPU (set -DTARGET_DEVICE=CPU or -DTARGET_DEVICE=GPU)")
+endif()
 
-include_directories(inc/cuda)
-include_directories(inc/cpp)
+option(BUILD_TESTS "Build tests" ON)
 
-# Add the CUDA and C++ source files
-file(GLOB_RECURSE CUDA_SOURCES "src/cuda/*.cu")
-file(GLOB_RECURSE CPP_SOURCES "src/cpp/*.cpp")
+add_subdirectory(app)
+add_subdirectory(ext)
+add_subdirectory(system)
 
-# Add the CUDA and C++ header files
-file(GLOB_RECURSE CUDA_HEADERS "inc/cuda/*.cuh")
-file(GLOB_RECURSE CPP_HEADERS "inc/cpp/*.hpp")
-
-# Compile the C++ code into an executable
-add_executable(athena ${CPP_SOURCES} ${CPP_HEADERS} ${CUDA_SOURCES} ${CUDA_HEADERS})
-target_link_libraries(athena ${OpenCV_LIBS} ${CUDA_LIBRARIES} boost_iostreams boost_system)
+if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(test)
+endif()

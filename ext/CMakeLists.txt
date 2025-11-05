@@ -1,0 +1,5 @@
+add_subdirectory(gtest)
+add_subdirectory(benchmark)
+add_subdirectory(cpputest)
+add_subdirectory(gnuplot)
+add_subdirectory(matplot)
