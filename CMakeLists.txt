@@ -22,7 +22,7 @@ option(BUILD_TESTS "Build tests" ON)
 
 add_subdirectory(app)
 add_subdirectory(ext)
-add_subdirectory(system)
+add_subdirectory(sys)
 
 if(BUILD_TESTS)
     enable_testing()

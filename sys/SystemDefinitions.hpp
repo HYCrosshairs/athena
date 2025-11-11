@@ -1,6 +1,6 @@
 #pragma once
 
-namespace lib::system
+namespace sys
 {
 enum class Target
 {
@@ -11,9 +11,9 @@ enum class Target
 struct SwBuildSettings
 {
 #if defined(CPU)
-    static constexpr Target target = SocTarget::cpu;
+    static constexpr Target target = Target::cpu;
 #elif defined(GPU)
-    static constexpr Target target = SocTarget::gpu;
+    static constexpr Target target = Target::gpu;
 #endif
 };
 
@@ -31,4 +31,4 @@ inline bool isBuildFor<Target::gpu>()
 {
     return SwBuildSettings::target == Target::gpu;
 }
-} // namespace lib::system
+} // namespace sys

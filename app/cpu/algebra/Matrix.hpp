@@ -32,18 +32,15 @@ public:
         return matrix[row][col];
     }
 
-    Matrix operator+(const Matrix& other) const
+    Matrix operator+(const Matrix& other) const noexcept
     {
         Matrix result;
-        for (uint32_t rowIndex = 0; rowIndex < rows; rowIndex++)
-        {
-            for (uint32_t colIndex = 0; colIndex < cols; colIndex++)
-            {
-                result.setValue(rowIndex, colIndex,
-                                this->getValue(rowIndex, colIndex) +
-                                other.getValue(rowIndex, colIndex));
-            }
-        }
+        const T* a = &matrix[0][0];
+        const T* b = &other.matrix[0][0];
+        T* r = &result.matrix[0][0];
+        constexpr uint32_t N = rows * cols;
+        for (uint32_t i = 0; i < N; ++i)
+            r[i] = a[i] + b[i];
         return result;
     }
 
