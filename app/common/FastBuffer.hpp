@@ -1,7 +1,5 @@
 #pragma once
 
-//#include <cstddef>
-
 namespace hyc::memory
 {
 template <typename T, size_t Size>

@@ -8,11 +8,14 @@ enum class Target
     gpu
 };
 
+struct CPU {};
+struct GPU {};
+
 struct SwBuildSettings
 {
-#if defined(CPU)
+#if defined(DEVICE_CPU)
     static constexpr Target target = Target::cpu;
-#elif defined(GPU)
+#elif defined(DEVICE_GPU)
     static constexpr Target target = Target::gpu;
 #endif
 };

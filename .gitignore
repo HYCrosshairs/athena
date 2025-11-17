@@ -36,5 +36,8 @@ Makefile
 CMakeCache.txt
 CMakeFiles
 athena
-.idea/vcs.xml
+.idea/codeStyles/codeStyleConfig.xml
+.idea/copilotDiffState.xml
+.idea/deployment.xml
+.idea/editor.xml
 ext

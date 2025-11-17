@@ -9,7 +9,7 @@ TEST_GROUP(TestMatrixLib)
 
     Matrix<int, 2, 2> matrixC;
 
-    Matrix<int , 2, 2> matrixD;
+    Matrix<int, 2, 2> matrixD;
 
     void initTestCase()
     {
