@@ -1,10 +1,11 @@
 #include "Coordinates.hpp"
 
+#include <array>
 #include <cmath>
 #include <matplot/matplot.h>
-#include <array>
 
-int main() {
+int main()
+{
     using namespace matplot;
 
     auto xt = [](double t) { return exp(-t / 10.) * sin(5 * t); };

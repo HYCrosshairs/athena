@@ -2,8 +2,7 @@
 
 namespace hyc::memory
 {
-template <typename T, size_t Size>
-struct FastBuffer
+template <typename T, size_t Size> struct FastBuffer
 {
     alignas(alignof(T)) unsigned char buffer[sizeof(T) * Size];
 
@@ -28,4 +27,4 @@ struct FastBuffer
     }
 };
 
-} // namespace hyc::memory
+}  // namespace hyc::memory

@@ -1,0 +1,48 @@
+---
+# Clang-Tidy configuration for Athena project
+Checks: >
+  -*,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-reserved-identifier,
+  clang-analyzer-*,
+  concurrency-*,
+  cppcoreguidelines-*,
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  -cppcoreguidelines-pro-type-reinterpret-cast,
+  -cppcoreguidelines-macro-usage,
+  -cppcoreguidelines-pro-type-vararg,
+  google-*,
+  -google-readability-todo,
+  -google-runtime-int,
+  modernize-*,
+  -modernize-use-trailing-return-type,
+  performance-*,
+  readability-*,
+  -readability-implicit-bool-conversion,
+  -readability-magic-numbers,
+
+CheckOptions:
+  - key: readability-identifier-length.MinimumVariableNameLength
+    value: '1'
+  - key: readability-identifier-length.MinimumParameterNameLength
+    value: '1'
+  - key: readability-identifier-length.MinimumFunctionNameLength
+    value: '1'
+  - key: readability-identifier-length.IgnoredVariableNames
+    value: '^[ijk_]$'
+  - key: readability-identifier-length.IgnoredParameterNames
+    value: '^[ijk_]$'
+  - key: google-readability-braces-around-statements.ShortStatementLines
+    value: '1'
+  - key: modernize-loop-convert.MaxCopySize
+    value: '16'
+  - key: modernize-loop-convert.MinConfidence
+    value: 'reasonable'
+  - key: performance-move-const-arg.CheckTriviallyCopyableMove
+    value: 'true'
+
+HeaderFilterRegex: '.*/(app|sys)/.*\.h(pp)?$'
+AnalyzeTemporaryDtors: true
+FormatStyle: 'file'
+UseColor: true

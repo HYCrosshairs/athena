@@ -8,8 +8,12 @@ enum class Target
     gpu
 };
 
-struct CPU {};
-struct GPU {};
+struct CPU
+{
+};
+struct GPU
+{
+};
 
 struct SwBuildSettings
 {
@@ -20,18 +24,15 @@ struct SwBuildSettings
 #endif
 };
 
-template <Target target>
-bool isBuildFor();
+template <Target target> bool isBuildFor();
 
-template<>
-inline bool isBuildFor<Target::cpu>()
+template <> inline bool isBuildFor<Target::cpu>()
 {
     return SwBuildSettings::target == Target::cpu;
 }
 
-template<>
-inline bool isBuildFor<Target::gpu>()
+template <> inline bool isBuildFor<Target::gpu>()
 {
     return SwBuildSettings::target == Target::gpu;
 }
-} // namespace sys
+}  // namespace sys
