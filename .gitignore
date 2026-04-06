@@ -41,4 +41,7 @@ athena
 .idea/deployment.xml
 .idea/editor.xml
 ext
-build
+build*
+
+# Nsight Compute reports (default prefix from scripts/ncu_TEST_LoadVsDirectCompute.sh)
+ncu_TEST_LoadVsDirectCompute.ncu-rep

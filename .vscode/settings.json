@@ -1,0 +1,9 @@
+{
+  "VsCodeTaskButtons.tasks": [
+    {
+      "label": "$(check) build",
+      "task": "check build",
+      "color": "error"
+    }
+  ]
+}

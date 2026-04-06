@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Mirrors .idea/tasks.json. Cursor/VS Code run tasks from tasks.json (JSON), not this file.
+-->
+<tasks version="2.0.0">
+  <task label="check build" type="shell">
+    <command>./run</command>
+    <args>
+      <arg>--build</arg>
+    </args>
+    <options cwd="${workspaceFolder}"/>
+    <group kind="test" isDefault="false"/>
+    <presentation reveal="always" panel="new"/>
+  </task>
+</tasks>

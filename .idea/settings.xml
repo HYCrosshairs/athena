@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Mirrors .idea/settings.json → VsCodeTaskButtons extension config.
+  Cursor/VS Code apply workspace settings from settings.json (JSON), not this file.
+-->
+<cursorSettings>
+  <vsCodeTaskButtons>
+    <task label="$(check) build" taskName="check build" color="error"/>
+  </vsCodeTaskButtons>
+</cursorSettings>
